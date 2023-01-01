@@ -1,0 +1,138 @@
+# Import the tkinter library
+import tkinter as tk
+
+# Define the NPC class
+class NPC:
+    def __init__(self, name, greeting, dialogue):
+        self.name = name
+        self.greeting = greeting
+        self.dialogue = dialogue
+    
+    def interact(self):
+        # Print the NPC's greeting
+        print(self.greeting)
+        
+        # Create the GUI window
+        window = tk.Tk()
+        window.title(self.name)
+        
+        # Create a label for the greeting
+        greeting_label = tk.Label(window, text=self.greeting)
+        greeting_label.pack()
+        
+        # Create a button for each available option
+        for option in self.dialogue:
+            button = tk.Button(window, text=option, command=lambda: self.select_option(option))
+            button.pack()
+        
+        # Start the GUI loop
+        window.mainloop()
+    
+    def select_option(self, option):
+        # Print the selected option
+        print(self.dialogue[option])
+
+# Define the rooms and their descriptions
+rooms = {
+    "entryway": "You are in the entryway of a house. There is a door to the north and a staircase leading upstairs to the west.",
+    "kitchen": "You are in the kitchen. There is a table with chairs and a door to the east.",
+    "living room": "You are in the living room. There is a couch and a fireplace. The door to the south leads back to the entryway.",
+    "upstairs hallway": "You are in the upstairs hallway. There is a door to the east leading to the attic and a door to the west leading to a bedroom.",
+    "attic": "You are in the attic. There is a mysterious locked door. A sign on the door reads: 'Solve the riddle to unlock the door: I am not alive, but I grow; I don't have lungs, but I need air; I don't have a mouth, but water kills me. What am I?'",
+    "hidden room": "You are in a hidden room. There is a chest in the corner. It is locked, but it looks like it could be opened with the right key.",
+    "bedroom": "You are in a bedroom. There is a bed and a dresser.",
+    "basement": "You are in the basement. It is dark and musty down here."
+}
+
+# Define the available actions
+actions = ["move", "map", "q"]
+
+# Define the map of the game world
+map = {
+    "entryway": ["north", "west"],
+    "kitchen": ["east"],
+    "living room": ["south"],
+    "upstairs hallway": ["east", "west"],
+    "attic": ["east"],
+    "hidden room": ["west"],
+    "bedroom": ["east"],
+    "basement": []
+}
+
+# Define the player's inventory
+inventory = []
+
+# Set the starting location
+location = "entryway"
+
+# Print the initial room description
+print(rooms[location])
+
+# Create the NPCs
+shopshopkeeper = NPC("Shopkeeper", "Welcome to my shop! Can I interest you in any items?", {
+    "Yes, I'd like to browse your wares": "Here are my items for sale: a key for 10 gold, a map for 5 gold, and a lantern for 15 gold. Which would you like?",
+    "No, I'm just looking": "Alright, let me know if you change your mind."
+})
+
+riddlemaster = NPC("Riddlemaster", "Hello, adventurer. I see you're trying to unlock the door to the hidden room. Perhaps you'd like to try solving a riddle to unlock it?", {
+    "Sure, I love riddles": "Very well. Here is the riddle: I am not alive, but I grow; I don't have lungs, but I need air; I don't have a mouth, but water kills me. What am I?",
+    "No, I'd rather not": "Very well. Good luck on your journey."
+})
+
+# Define the available actions
+actions = ["move", "map", "q", "interact"]
+
+while True:
+    # Print the available actions
+    print("Actions:", ", ".join(actions))
+    
+    # Get the player's input
+    action = input("What would you like to do? ")
+    
+    # Check if the player wants to move
+    if action == "move":
+        # Print the available directions
+        print("Available directions:", ", ".join(map[location]))
+        
+        # Get the player's input
+        direction = input("Which direction would you like to go? ")
+        
+        # Check if the direction is available
+        if direction in map[location]:
+            # Update the location
+            location = direction
+            
+            # Print the new room description
+            print(rooms[location])
+        else:
+            print("You can't go that way.")
+    
+    # Check if the player wants to view the map
+    elif action == "map":
+        # Print the map
+        for room, directions in map.items():
+            print(room, ":", ", ".join(directions))
+    
+    # Check if the player wants to interact with an NPC
+    elif action == "interact":
+        # Print the available NPCs
+        print("Available NPCs:", ", ".join([shopkeeper.name, riddlemaster.name]))
+        
+        # Get the player's input
+        npc = input("Which NPC would you like to interact with? ")
+        
+        # Check if the NPC exists
+        if npc == shopkeeper.name:
+            shopkeeper.interact()
+        elif npc == riddlemaster.name:
+            riddlemaster.interact()
+        else:
+            print("There is no NPC with that name.")
+    
+    # Check if the player wants to quit the game
+    elif action == "q":
+        break
+    
+    # If the player's input is invalid
+    else:
+        print("Invalid action.")
